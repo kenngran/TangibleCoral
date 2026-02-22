@@ -5,25 +5,25 @@
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // Ultrasonic
-const int trig1 = 4, echo1 = 3;
-const int trig2 = 12, echo2 = 13;
+const int trig1 = 3, echo1 = 2;
+const int trig2 = 4, echo2 = 5;
 
 // Motor driver
-const int AIN1 = 5, AIN2 = 6, BIN1 = 9, BIN2 = 10, SLP = 8;
+const int AIN1 = 6, AIN2 = 7, BIN1 = 9, BIN2 = 10, SLP = 8;
 
 ////////// 🎛 ARTIST CONTROLS 🎛 //////////
 
 // Distance behaviour
-const int minDistance = 5;
-const int maxDistance = 200;
+const int minDistance = 50;
+const int maxDistance = 100;
 
 // Death thresholds
-const int deathDistance  = 100;
-const int reviveDistance = 130;
+const int deathDistance  = 10;
+const int reviveDistance = 15;
 
 // Motor feel
-const int minMotorSpeed = 190;
-const int maxMotorSpeed = 250;
+const int minMotorSpeed = 70;
+const int maxMotorSpeed = 200;
 const float motorSmooth = 0.8;
 
 // Interaction sensitivity
@@ -31,7 +31,7 @@ const float distanceSmooth = 0.7;
 
 // Breathing feel
 const float breathMultiplier = 0.3;
-const int breathMin = 1;
+const int breathMin = 10;
 const int breathMax = 12;
 
 ///////////////////////////////////////////
@@ -44,7 +44,7 @@ bool coralDead = false;
 
 // Motor startup boost state
 bool motorWasStopped = true;
-unsigned long motorStartTime = 200;
+unsigned long motorStartTime = 2000;
 
 void setup() {
 
@@ -67,12 +67,12 @@ void setup() {
 void loop() {
 
   long d1 = readUltrasonic(trig1, echo1);
-  delay(40);
+  delay(5);
   long d2 = readUltrasonic(trig2, echo2);
 
   long active = getValidDistance(d1, d2);
 
-  Serial.println(active);
+  //Serial.println(active);
 
   // Smooth distance
   smoothedDistance =
@@ -105,9 +105,11 @@ void loop() {
 
   driveMotors(finalSpeed);
 
+  Serial.println(active);
+
   updateCoralLight();
 
-  delay(20);
+  delay(5);
 }
 
 long readUltrasonic(int trig, int echo) {
@@ -129,7 +131,7 @@ long getValidDistance(long d1, long d2) {
 void driveMotors(int speed) {
 
   const int startBoost = 255;  // full power kick
-  const int boostTime = 80;    // milliseconds
+  const int boostTime = 500;    // milliseconds
 
   if (speed == 0) {
     motorWasStopped = true;
